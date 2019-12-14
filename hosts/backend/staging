@@ -1,4 +1,5 @@
 [api]
-# ここにIPアドレス 
+52.197.23.33
+
 [staging:children]
 api
