@@ -1,0 +1,65 @@
+---
+- name: Install dependent packages of MySQL
+  yum:
+    name: "{{ packages }}"
+    state: present
+    lock_timeout: 180
+  vars:
+    packages:
+      - MySQL-python
+      - libselinux-python
+      - yum-utils
+
+- name: Add mysql 8.0 repository
+  yum:
+    name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+    lock_timeout: 180
+
+- name: Enable mysql 8.0 Repository
+  command: >
+    yum-config-manager --enable mysql80-community
+
+- name: Install MySQL
+  yum:
+    name: ['mysql-community-server',
+           'mysql-community-client',
+           'mysql-community-common',
+           'mysql-community-libs']
+    lock_timeout: 180
+
+- name: Setting up automatic startup of mysql
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: Edit /root/.my.cnf
+  template:
+    src: roles/mysql/templates/my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Start MySQL service
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: get root password
+  shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
+  register: root_password
+  become: yes
+
+- name: Level down of validate_password.policy
+  command: mysql -u root -p{{ root_password.stdout }} --connect-expired-password -e "SET GLOBAL validate_password.policy=LOW;"
+  when: not ansible_check_mode
+
+- name: Level down of validate_password.special_char_count
+  command: mysql -u root -p{{ root_password.stdout }} --connect-expired-password -e "SET GLOBAL validate_password.special_char_count=0;"
+  when: not ansible_check_mode
+
+- name: update expired root user password
+  command: mysql -u root -p{{ root_password.stdout }} --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ db_pass }}';"
+  when: not ansible_check_mode

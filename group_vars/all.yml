@@ -1,0 +1,16 @@
+ruby_version: 2.6.4
+ansible_user: ec2-user
+ansible_ssh_private_key_file: ~/.ssh/yuta-ushijima.pem
+git_src_archive_download_url: 'https://github.com/git/git/archive/master.zip'
+nginx_download_url: 'http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm'
+rbenv_download_url: 'https://github.com/sstephenson/rbenv.git'
+ruby_build_download_url: 'https://github.com/sstephenson/ruby-build.git'
+bundler_version: 2.0.2
+rails_version: 6.0.0
+db_pass: dbpassword
+api_name: web-ushizima
+backend_repository_name: web-ushizima
+rds_master_user_name: ''
+rds_master_user_password: ''
+rds_port: 3306
+DATABASE_HOST_STAGING: 'web-ushizima.123456.ap-northeast-1.rds.amazonaws.com'

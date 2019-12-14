@@ -1,0 +1,67 @@
+---
+# https://github.com/treetips/ansible-playbook-git/blob/master/roles/git/tasks/main.yml
+- name: uninstall default installed Git
+  become: yes
+  yum:
+    name: git
+    state: absent
+    lock_timeout: 180
+
+- name: System required dependencies
+  become: yes
+  yum:
+    name: "{{ dependencies }}"
+    state: present
+    lock_timeout: 180
+  vars:
+    dependencies:
+      - gcc
+      - gcc-c++
+      - autoconf
+      - automake
+      - kernel-devel
+      - ncurses-devel
+      - gettext
+      - zlib-devel
+      - curl-devel
+      - perl-ExtUtils-MakeMaker
+      - openssl-devel
+
+- name: Download git
+  become: yes
+  get_url:
+    url: "{{ git_src_archive_download_url }}"
+    dest: /usr/local/src/git-master.zip
+
+- name: Register git is downloaded
+  stat:
+    path: /usr/local/src/git-master
+  register: git_downloaded
+
+- name: Unarchive git
+  become: yes
+  unarchive:
+    src: /usr/local/src/git-master.zip
+    dest: /usr/local/src
+    copy: no
+  when: not ansible_check_mode and git_downloaded.stat.exists == false
+
+- name: Make configure
+  become: yes
+  shell: make configure chdir=/usr/local/src/git-master
+  when: not ansible_check_mode and git_downloaded.stat.exists == false
+
+- name: Make configure
+  become: yes
+  shell: ./configure --prefix=/usr/local chdir=/usr/local/src/git-master
+  when: not ansible_check_mode and git_downloaded.stat.exists == false
+
+- name: Make all
+  become: yes
+  shell: make all chdir=/usr/local/src/git-master
+  when: not ansible_check_mode and git_downloaded.stat.exists == false
+
+- name: Make install
+  become: yes
+  shell: make install chdir=/usr/local/src/git-master
+  when: not ansible_check_mode and git_downloaded.stat.exists == false

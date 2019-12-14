@@ -1,0 +1,4 @@
+[api]
+# ここにIPアドレス 
+[staging:children]
+api

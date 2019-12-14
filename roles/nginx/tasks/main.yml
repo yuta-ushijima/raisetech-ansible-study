@@ -1,0 +1,34 @@
+---
+- name: Install nginx
+  become: yes
+  yum:
+    name: "{{ nginx_download_url }}"
+    state: present
+    lock_timeout: 180
+
+- name: Install nginx package
+  become: yes
+  yum:
+    name: nginx
+    state: present
+    lock_timeout: 180
+
+- name: Edit ngixn.conf for backend
+  template:
+    src: roles/nginx/templates/backend_nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  when: "'api' in group_names"
+
+- name: Edit ngixn.conf for frontend
+  template:
+    src: roles/nginx/templates/frontend_nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  when: "'app' in group_names"
+
+- name: Set auto start nginx
+  become: yes
+  command: /sbin/chkconfig nginx on
+
+- name: Restart nginx
+  become: yes
+  command: /sbin/service nginx restart

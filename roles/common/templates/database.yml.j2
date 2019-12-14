@@ -1,0 +1,17 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: {{ rds_master_user_name }}
+  port: {{ rds_port }}
+  password: {{ rds_master_user_password }}
+
+staging:
+  <<: *default
+  database: {{ DATABASE_NAME }}
+  host: {{ DATABASE_HOST_STAGING }}
+
+production:
+  <<: *default
+  database: {{ DATABASE_NAME }}
+  host: {{ DATABASE_HOST_PRODUCTION }}
