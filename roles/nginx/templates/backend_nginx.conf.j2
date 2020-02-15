@@ -54,16 +54,16 @@ http {
   # for more information.
   # include /etc/nginx/conf.d/*.conf;
 
-	upstream unicorn {
-	  server unix:/var/www/{{ backend_repository_name }}/shared/tmp/sockets/unicorn.sock fail_timeout=0;
-	}
+	#upstream unicorn {
+	 # server unix:/var/www/{{ backend_repository_name }}/shared/tmp/sockets/unicorn.sock fail_timeout=0;
+	#}
 
 	server {
 	  listen 80;
 
 	  server_name {{ api_domain }};
-	  access_log /var/www/{{ backend_repository_name }}/current/log/nginx_access.log;
-	  error_log /var/www/{{ backend_repository_name }}/current/log/nginx_error.log;
+	  #access_log /var/www/{{ backend_repository_name }}/current/log/nginx_access.log;
+	  #error_log /var/www/{{ backend_repository_name }}/current/log/nginx_error.log;
 
 	  location / {
 	    proxy_set_header X-Real-IP $remote_addr;
@@ -73,7 +73,7 @@ http {
 	  }
 
 	  location ~ ^/assets/ {
-      root  /var/www/{{ backend_repository_name }}/current/public;
+      #root  /var/www/{{ backend_repository_name }}/current/public;
     }
 
     error_page 404 /404.html;
