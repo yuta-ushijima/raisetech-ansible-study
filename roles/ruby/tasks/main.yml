@@ -20,6 +20,7 @@
   git:
     repo: "{{ rbenv_download_url }}"
     dest: /usr/local/rbenv
+  when: not ansible_check_mode
 
 - name: Edit bashrc
   template:
@@ -32,6 +33,7 @@
   git:
     repo: "{{ ruby_build_download_url }}"
     dest: /usr/local/rbenv/plugins/ruby-build
+  when: not ansible_check_mode
 
 - name: Install Ruby
   shell: bash -lc "rbenv install -s {{ ruby_version }}"
