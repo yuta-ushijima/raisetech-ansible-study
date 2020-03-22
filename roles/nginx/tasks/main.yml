@@ -12,6 +12,7 @@
     name: nginx
     state: present
     lock_timeout: 180
+  when: not ansible_check_mode
 
 - name: Edit ngixn.conf for backend
   template:
