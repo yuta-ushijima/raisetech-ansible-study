@@ -20,7 +20,7 @@
 
 - name: Execute yarn
   become: yes
-  shell: yarn install --check-files
+  shell: yarn install --check-files --ignore-engines
 
 - name: Install pm2
   shell: yarn global add pm2
