@@ -26,6 +26,7 @@
            'mysql-community-common',
            'mysql-community-libs']
     lock_timeout: 180
+  when: not ansible_check_mode
 
 - name: Setting up automatic startup of mysql
   service:
