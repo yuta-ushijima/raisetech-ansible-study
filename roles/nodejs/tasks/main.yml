@@ -8,6 +8,7 @@
     name: nodejs
     state: latest
     lock_timeout: 180
+  when: not ansible_check_mode
 
 - name: Install yarn package
   get_url:
