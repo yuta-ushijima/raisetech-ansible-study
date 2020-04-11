@@ -1,6 +1,4 @@
 ruby_version: 2.6.4
-ansible_user: ec2-user
-ansible_ssh_private_key_file: ~/.ssh/yuta-ushijima.pem
 git_src_archive_download_url: 'https://github.com/git/git/archive/master.zip'
 nginx_download_url: 'http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm'
 rbenv_download_url: 'https://github.com/sstephenson/rbenv.git'
