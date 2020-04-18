@@ -48,4 +48,4 @@
     - bundler -v "{{ bundler_version }}"
 
 - name: Install Rails
-  shell: bash -lc "gem install 5.2.4.2"
+  shell: bash -lc "gem install rails -v 5.2.4.2"
