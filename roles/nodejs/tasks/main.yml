@@ -1,28 +1,55 @@
 ---
-- name: Setup nodejs12.x
-  shell: curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
+- name: Clone Nodenv repo
+  become: no
+  ansible.builtin.git:
+    repo: https://github.com/nodenv/nodenv.git
+    dest: ~/.nodenv
 
-- name: Installing latest version of node.js
-  become: yes
-  yum:
-    name: nodejs
-    state: latest
-    lock_timeout: 180
-  when: not ansible_check_mode
+- name: Write nodenv path to bash_profile
+  become: no
+  ansible.builtin.lineinfile:
+    dest: ~/.bash_profile
+    state: present
+    line:
+      export PATH="$HOME/.nodenv/bin:$PATH"
 
-- name: Install yarn package
-  get_url:
-    url: https://dl.yarnpkg.com/rpm/yarn.repo
-    dest: /etc/yum.repos.d/yarn.repo
+- name: eval init nodenv to bash_profile
+  become: no
+  ansible.builtin.lineinfile:
+    dest: ~/.bash_profile
+    state: present
+    line:
+      eval "$(nodenv init -)"
 
-- name: Installing yarn
-  shell: npm install -g yarn
-  become: yes
+- name: reboot shell
+  ansible.builtin.reboot:
+
+- name: Create nodenv/plugins directory
+  become: no
+  ansible.builtin.file:
+    path: ~/.nodenv/plugins/node-build
+    state: directory
+
+- name: Clone node-build repo to nodenv/plugins
+  become: no
+  ansible.builtin.git:
+    repo: https://github.com/nodenv/node-build.git
+    dest: ~/.nodenv/plugins/node-build
+
+- name: Clone node-yarn-install repo to nodenv/plugins
+  become: no
+  ansible.builtin.git:
+    repo: https://github.com/pine/nodenv-yarn-install.git
+    dest: ~/.nodenv/plugins/nodenv-yarn-install
+
+- name: Install specified node version by nodenv
+  become: no
+  shell: bash -lc "nodenv install {{ node_version }}"
+
+- name: setting node global version and rehash
+  become: no
+  shell: bash -lc "nodenv global {{ node_version }} && nodenv rehash"
 
 - name: Execute yarn
-  become: yes
-  shell: yarn install --check-files --ignore-engines
-
-- name: Install pm2
-  shell: yarn global add pm2
-  become: yes
+  become: no
+  shell: bash -lc "yarn install --check-files --ignore-engines"

@@ -5,6 +5,7 @@ rbenv_download_url: 'https://github.com/sstephenson/rbenv.git'
 ruby_build_download_url: 'https://github.com/sstephenson/ruby-build.git'
 bundler_version: 2.0.2
 rails_version: 6.0.0
+node_version: 17.9.1
 db_pass: dbpassword
 api_name: web-ushizima
 backend_repository_name: web-ushizima
